@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+enum UserRole {
+  USER
+  COMPANY
+}
+
+model User {
+  id                      String                 @id @default(cuid())
+  email                   String?                @unique
+  emailVerified           DateTime?              @map("email_verified")
+  password                String?
+  name                    String
+  username                String                 @unique @default(cuid())
+  image                   String?
+  role                    UserRole?
+  isTwoFactorConfirmation Boolean                @default(false)
+  TwoFactorConfirmation   TwoFactorConfirmation?
+
+  runs Runs[]
+
+  accounts Account[]
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Runs {
+  id      String  @id @default(cuid())
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  success Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model ErrorLog {
+  id        Int      @id @default(autoincrement())
+  message   String
+  stack     String?  // стек вызовов
+  meta      Json?    // дополнительные данные (пользователь, URL и т.д.)
+  createdAt DateTime @default(now())
+
+  @@map("error_logs")
+}

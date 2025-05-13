@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800;900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+:root {
+  height: 100%;
+}
+
+:root {
+  --text-hex: #000;
+  --background-hex: #f6f6f8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-hex: #fff;
+    --background-hex: #090a0c;
+  }
+}
+
+body {
+  color: var(--text-hex);
+  background: var(--background-hex);
+
+  font-family: "Golos Text", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: -webkit-fill-available;
+  -webkit-tap-highlight-color: transparent; /* remove blue bg on click */
+}
+
+/* убираем кнопку закрытия в тосте */
+.Toastify__close-button {
+  display: none;
+}
+
+input::file-selector-button {
+  /* font-weight: 500;
+  border-radius: 6px;
+  border: 0;
+  background: #090a0c;
+  padding: 2px 6px;
+  color: #8f8f8f;
+  margin-right: 12px; */
+  display: none;
+}
+
+/* checlbox drop styles */
+input[type="checkbox"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  width: 20px;
+  height: 20px;
+  border-radius: 0.15em;
+  margin-right: 0.5em;
+  border: 0.15em solid #00afff;
+  cursor: pointer;
+}
+input:checked {
+  background-color: #00afff;
+  position: relative;
+}
+input:checked::before {
+  content: "✔";
+  font-size: 16px;
+  line-height: 16px;
+  color: #fff;
+  position: absolute;
+  right: 1px;
+}
+input[type="checkbox"]:disabled {
+  border-color: #c0c0c0;
+  background-color: #c0c0c0;
+}
+input[type="checkbox"]:disabled {
+  color: #c0c0c0;
+}
+
+/* убираем кнопки из инпута с type = number */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
